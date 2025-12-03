@@ -1,0 +1,19 @@
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+    <title>Dashboard for staff</title>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+    <div class="dashboard-card">
+        <h2>WELCOME Staff !</h2>
+        <p>You have successfully logged in.</p>  
+        <a href="{% url 'logout' %}">logout</a>
+    </div>
+</div>
+
+</body>
+</html>

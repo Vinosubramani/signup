@@ -1,0 +1,14 @@
+ <div class="signup-container"></div>
+{% load static %}
+<form  class="signup-form"method="POST">
+    {% csrf_token %}
+   <h2>Create Account</h2>
+    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+    <input type="text" name="username" placeholder="Username">
+    <input type="password" name="password" placeholder="Password">
+    <input type="password1" name="password1" placeholder=" confirm Password">
+     <span><p style="color:red; margin: -5px;">{{ msg }}</p></span>
+    <button type="submit">Sign Up</button>
+    
+</form>
+

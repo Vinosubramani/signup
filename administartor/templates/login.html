@@ -1,0 +1,22 @@
+ <div class="login-container"></div>
+ {% load static %}
+ <html>
+ <head>
+   
+    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+</head>
+<body>
+<form class="login-form"method="POST">
+    {% csrf_token %}
+     <h2>Login Page</h2>
+    <label>Username:</label>
+    <input type="text" name="username" >
+    <label>Password:</label>
+    <input type="password" name="password" >
+    <button type="submit">Submit</button>
+    <span><p style="color:red;text-align:center;">{{error}}</p></span>
+
+</form>
+</body>
+</html>
+    
