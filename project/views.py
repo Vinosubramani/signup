@@ -13,7 +13,7 @@ def signup(request):
             msg="username already exists"
         else:
             if password == password1:
-                User.objects.create(username=username, password=password)
+                user=User.objects.create_user(username=username, password=password)
                 user.save()
 
                 return redirect("login")
