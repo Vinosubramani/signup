@@ -38,5 +38,8 @@ urlpatterns = [
     path('logout/', logout_view, name='logout'),
     path('signup/',signup, name="signup"),
     path('', user_login, name='login'),
+    path('',  include('home.urls')),
+
+    path('product', include('product.urls')),
 
 ]
