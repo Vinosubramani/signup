@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'app',
     'administartor',
     'staff',
+    'product',
     
 
     
@@ -159,3 +160,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# After successful login, redirect here
+LOGIN_REDIRECT_URL = '/'           # Redirect to homepage of Cake Shop
+LOGOUT_REDIRECT_URL = '/login/'    # Redirect after logout

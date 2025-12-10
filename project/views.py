@@ -50,7 +50,7 @@ def user_login(request):
             else:
                 print(user)
                 print("user")
-                return redirect('/student/')
+                return redirect('/')
 
         return render(request, 'login.html', {'error': 'Invalid Username or Password!'})
 
