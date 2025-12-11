@@ -4,5 +4,5 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 def dashboard(request):
-    return redirect('home')
+    return redirect( request, 'home')
 

@@ -8,7 +8,6 @@
 </head>
 <body>
 
-<!-- NAVBAR -->
 <nav class="navbar navbar-expand-lg bg-light shadow-sm">
     <div class="container">
         <a class="navbar-brand fw-bold" href="{% url 'home' %}">Cake Shop</a>
@@ -20,39 +19,34 @@
 </nav>
 
 <div class="container my-5">
+    <h2 class="text-center mb-4">All Products</h2>
     <div class="row">
-        <!-- Sidebar: Categories -->
-        <div class="col-md-3">
-            <h4>Categories</h4>
-            <ul class="list-group">
-                {% for category in categories %}
-                <li class="list-group-item">
-                    <a href="{% url 'category_products' category.slug %}">{{ category.name }}</a>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
 
-        <!-- Products List -->
-        <div class="col-md-9">
-            <h2 class="text-center mb-4">All Products</h2>
-            <div class="row">
-                {% for product in products %}
-                <div class="col-md-4 mb-4">
-                    <div class="card">
-                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                        <div class="card-body text-center">
-                            <h5>{{ product.name }}</h5>
-                            <p>₹{{ product.price }}</p>
-                            <a href="#" class="btn btn-primary">View</a>
-                        </div>
-                    </div>
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text">₹{{ product.price }}</p>
                 </div>
-                {% empty %}
-                <p class="text-center">No products available.</p>
-                {% endfor %}
+
+                <!-- Buttons Section -->
+                <div class="card-footer bg-white text-center">
+                    <a href="{% url 'product_order' product.id %}" class="btn btn-success btn-sm me-2">Order</a>
+
+                   <a href="{% url 'product_recipe' product.id %}" class="btn btn-warning btn-sm">Recipe</a>
+
+                </div>
+
             </div>
         </div>
+        {% empty %}
+        <p class="text-center">No products available.</p>
+        {% endfor %}
+
     </div>
 </div>
 
