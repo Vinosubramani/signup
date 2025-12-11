@@ -1,0 +1,24 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Order Successful - Cake Shop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'product/style.css' %}">
+</head>
+<body>
+
+<div class="container my-5 text-center">
+    <div class="card p-4 shadow-sm">
+        <h2 class="mb-3 text-success">Order Placed Successfully!</h2>
+        <p><strong>Product:</strong> {{ order.product.name }}</p>
+        <p><strong>Quantity:</strong> {{ order.quantity }} kg</p>
+        <p><strong>Delivery Date:</strong> {{ order.delivery_date }}</p>
+        <p><strong>Text on Cake:</strong> {{ order.message }}</p>
+
+        <a href="{% url 'products' %}" class="btn btn-primary mt-3">Back to Products</a>
+    </div>
+</div>
+
+</body>
+</html>
