@@ -13,7 +13,7 @@
         <a class="navbar-brand fw-bold" href="{% url 'home' %}">Cake Shop</a>
         <ul class="navbar-nav ms-auto">
             <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'products' %}">Products</a></li>
+            
         </ul>
     </div>
 </nav>
@@ -28,7 +28,8 @@
                 <div class="card-body text-center">
                     <h5>{{ product.name }}</h5>
                     <p>₹{{ product.price }}</p>
-                    <a href="#" class="btn btn-primary">order</a>
+                    <a href="{% url 'product_order' product.id %}" class="btn btn-primary">Order</a>
+                    <a href="{% url 'product_recipe' product.id %}" class="btn btn-primary">Recipe</a>
                 </div>
             </div>
         </div>
