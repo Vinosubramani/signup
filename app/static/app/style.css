@@ -309,48 +309,5 @@ h2 {
 
 
 
-/* Banner Section */
-.banner {
-    background: linear-gradient(135deg, #8e44ad, #c0392b); /* gradient background */
-    color: white;
-    text-align: center;
-    padding: 120px 20px; /* height + spacing */
-    position: relative;
-    overflow: hidden;
-}
-
-/* Banner Heading */
-.banner h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
-    font-family: 'Arial', sans-serif;
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* shadow for visibility */
-}
-
-/* Banner Paragraph */
-.banner p {
-    font-size: 20px;
-    margin-bottom: 30px;
-}
-
-/* Banner Button */
-.banner .btn {
-    display: inline-block;
-    background-color: white;
-    color: #8e44ad;
-    padding: 12px 30px;
-    border-radius: 30px;
-    font-weight: bold;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.banner .btn:hover {
-    background-color: #f1c40f;
-    color: white;
-    cursor: pointer;
-}
-
-
 
 

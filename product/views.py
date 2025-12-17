@@ -1,6 +1,12 @@
-from django.shortcuts import render,get_object_or_404
+import uuid
+from django.shortcuts import render,get_object_or_404,redirect
 from .models import Product,Category, Order
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html')
+
 def home(request):
     categories=Category.objects.all()
     products=Product.objects.all()
@@ -32,16 +38,23 @@ def product_order(request, pk):
         delivery_date = request.POST.get('delivery_date')
         message = request.POST.get('message')
 
+        amount = product.price * float(quantity)
+        txnid = f"MOCK-{uuid.uuid4()}"
+
         order = Order.objects.create(
             product=product,
             user=request.user,
-            quantity=kg,
+            quantity=quantity,
+            amount=amount,
             delivery_date=delivery_date,
-            message=message
+            message=message,
+            txnid=txnid,
+            payment_status='PENDING'
         )
-
-        return render(request, 'product/order_success.html', {'order': order})
+        return redirect('mock_payment', order.id)
 
     return render(request, 'product/order.html', {'product': product})
+
+       
 
 
