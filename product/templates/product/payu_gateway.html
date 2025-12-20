@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PayU Payment Page</title>
+</head>
+<body>
+    <h2>PayU Payment Gateway (Dummy)</h2>
+
+    <p><strong>Amount:</strong> ₹{{ order.amount }}</p>
+
+    <form method="post" action="{% url 'payu_success' order.id %}">
+        {% csrf_token %}
+        <button>Simulate SUCCESS</button>
+    </form>
+
+    <br>
+
+    <form method="post" action="{% url 'payu_failure' order.id %}">
+        {% csrf_token %}
+        <button>Simulate FAILURE</button>
+    </form>
+</body>
+</html>
