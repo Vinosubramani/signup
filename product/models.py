@@ -42,6 +42,7 @@ class Order(models.Model):
 
     # PayU fields
     txnid = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    
 
     payment_status = models.CharField(
         max_length=20,
