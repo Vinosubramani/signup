@@ -3,7 +3,104 @@
  <html>
  <head>
    
-    <link rel="stylesheet" href="{% static 'app/style.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'app/style.css' %}"> -->
+     <style>
+        /* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page background */
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #eef2f7, #dbe4f0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Login form container */
+.login-form {
+    width: 360px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Heading */
+.login-form h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* Labels */
+.login-form label {
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Inputs */
+.login-form input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.login-form input:focus {
+    border-color: #4a7cff;
+}
+
+/* Submit button */
+.login-form button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #4a7cff;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.login-form button:hover {
+    background: #365fd6;
+}
+
+/* Links */
+.login-form a {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #4a7cff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.login-form a:hover {
+    text-decoration: underline;
+}
+
+/* Error message */
+.login-form span p {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+     </style>
 </head>
 <body>
 <form class="login-form"method="POST">
@@ -14,6 +111,9 @@
     <label>Password:</label>
     <input type="password" name="password" >
     <button type="submit">Submit</button>
+    <a href="{% url 'product:otp_login' %}">Login with OTP</a>
+
+
     <span><p style="color:red;text-align:center;">{{error}}</p></span>
           <p style="text-align:center; margin-top:10px;">
         Don't have an account?

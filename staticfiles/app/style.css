@@ -159,4 +159,203 @@ body {
 
 
 
+/*productcss*/
+
+
+/* BASIC RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* NAVBAR */
+.navbar {
+    padding: 12px 0;
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+    color: #6a0dad !important; /* Violet touch */
+}
+
+.nav-link {
+    font-weight: 500;
+}
+
+/* CARD */
+.card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+.card img {
+    height: 180px;
+    object-fit: cover;
+}
+
+/* CARD BODY */
+.card-body h5 {
+    font-weight: 600;
+}
+
+.card-body p {
+    color: #555;
+    font-size: 1rem;
+}
+
+/* BUTTONS */
+.btn-success {
+    background-color: #28a745;
+    border: none;
+    padding: 6px 14px;
+    width: auto;              
+    display: inline-block;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-warning {
+    background-color: #ffb300;
+    border: none;
+    padding: 6px 14px;
+}
+
+.btn-warning:hover {
+    background-color: #e0a200;
+}
+
+/* CARD FOOTER */
+.card-footer {
+    background-color: #fff;
+    border-top: none;
+    padding: 12px;
+}
+
+/* FOOTER */
+footer {
+    margin-top: 40px;
+    color: #444;
+}
+
+
+
+
+
+/* Main Page Spacing */
+body {
+    background-color: #f9f9f9;
+}
+
+/* Card Styling */
+.card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+/* Product Image */
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Buttons in Card */
+.card-footer a {
+    width: auto;
+    display: inline-block;
+}
+
+/* Order Button */
+.btn-success {
+    background-color: #28a745;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 14px;
+    width: auto;              
+    display: inline-block;
+}
+
+/* Recipe Button */
+.btn-warning {
+    background-color: #f0ad4e;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 14px;
+}
+
+/* On Hover */
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-warning:hover {
+    background-color: #ec971f;
+}
+
+/* Page Title */
+h2 {
+    font-weight: 600;
+}
+
+
+
+/* Banner Section */
+.banner {
+    background: linear-gradient(135deg, #8e44ad, #c0392b); /* gradient background */
+    color: white;
+    text-align: center;
+    padding: 120px 20px; /* height + spacing */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Banner Heading */
+.banner h1 {
+    font-size: 48px;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* shadow for visibility */
+}
+
+/* Banner Paragraph */
+.banner p {
+    font-size: 20px;
+    margin-bottom: 30px;
+}
+
+/* Banner Button */
+.banner .btn {
+    display: inline-block;
+    background-color: white;
+    color: #8e44ad;
+    padding: 12px 30px;
+    border-radius: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.banner .btn:hover {
+    background-color: #f1c40f;
+    color: white;
+    cursor: pointer;
+}
+
+
+
 

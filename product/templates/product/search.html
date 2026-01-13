@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Search</title>
+</head>
+<body>
+
+<h3>Search results</h3>
+
+{% for product in products %}
+  <p>{{ product.name }} - ₹{{ product.price }}</p>
+{% empty %}
+  <p>No results found</p>
+{% endfor %}
+
+</body>
+</html>

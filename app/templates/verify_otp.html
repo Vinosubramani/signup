@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sign Up</title>
+    <title>Verify OTP</title>
 
     <style>
       /* Reset */
@@ -22,9 +22,9 @@
         align-items: center;
       }
 
-      /* Signup card */
-      .signup-form {
-        width: 380px;
+      /* Card */
+      .otp-card {
+        width: 360px;
         background: #ffffff;
         padding: 30px;
         border-radius: 14px;
@@ -32,37 +32,36 @@
       }
 
       /* Heading */
-      .signup-form h2 {
+      .otp-card h2 {
         text-align: center;
         margin-bottom: 25px;
         color: #333;
       }
 
       /* Labels */
-      .signup-form label {
+      .otp-card label {
         display: block;
         margin-bottom: 6px;
-        margin-top: 12px;
         font-size: 14px;
         color: #555;
       }
 
-      /* Inputs */
-      .signup-form input {
+      /* Input */
+      .otp-card input {
         width: 100%;
-        padding: 10px 12px;
+        padding: 12px;
         border-radius: 8px;
         border: 1px solid #ccc;
         outline: none;
         transition: border-color 0.3s;
       }
 
-      .signup-form input:focus {
+      .otp-card input:focus {
         border-color: #4a7cff;
       }
 
       /* Button */
-      .signup-form button {
+      .otp-card button {
         width: 100%;
         margin-top: 20px;
         padding: 12px;
@@ -76,19 +75,19 @@
         transition: background 0.3s;
       }
 
-      .signup-form button:hover {
+      .otp-card button:hover {
         background: #365fd6;
       }
 
-      /* Error text */
+      /* Error / message */
       .error-text {
+        margin-top: 10px;
         color: red;
         font-size: 14px;
-        margin-top: 8px;
         text-align: center;
       }
 
-      /* Bottom text */
+      /* Footer */
       .bottom-text {
         margin-top: 18px;
         text-align: center;
@@ -108,30 +107,33 @@
   </head>
 
   <body>
-    <div class="signup-form">
-    <form method="POST">
-    {% csrf_token %}
-  <h2 class="signup-title">Sign Up</h2>
-  <label>Username</label>
-  <input type="text" name="username" required>
+    <div class="otp-card">
+      <form method="POST">
+        {% csrf_token %}
 
-  <label>Email</label>
-  <input type="email" name="email" required>
+        <h2>Verify OTP</h2>
 
-  <label>Password</label>
-  <input type="password" name="password" required>
+        <label>Enter OTP</label>
+        <input type="text" name="otp" placeholder="Enter the OTP" required />
 
-  <label>Confirm Password</label>
-  <input type="password" name="password1" required>
+        {% if msg %}
+        <p class="error-text">{{ msg }}</p>
+        {% endif %}
 
-  <button type="submit">Proceed</button>
-</form>
+        <button type="submit">Verify OTP</button>
 
         <p class="bottom-text">
-          Already have an account?
-          <a href="{% url 'login' %}">Login</a>
+          Didn’t receive OTP?
+          <a href="{% url 'resend_otp' %}">Resend</a>
         </p>
       </form>
     </div>
+    {% if messages %}
+<script>
+  {% for message in messages %}
+    alert("{{ message }}");
+  {% endfor %}
+</script>
+{% endif %}
   </body>
 </html>
