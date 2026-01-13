@@ -10,7 +10,8 @@
 <div class="container my-5">
     <h2 class="mb-4">{{ product.name }} Recipe</h2>
     <p>{{ product.recipe|linebreaks }}</p>
-    <a href="{% url 'products' %}" class="btn btn-primary mt-3">Back to Products</a>
+    <!-- Add namespace -->
+    <a href="{% url 'product:home' %}" class="btn btn-primary mt-3">Back to Products</a>
 </div>
 </body>
 </html>

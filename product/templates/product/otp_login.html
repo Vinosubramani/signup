@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>OTP Login</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <style>
+    /* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Page background */
+body {
+    height: 100vh;
+    background: linear-gradient(135deg, #eef2f7, #dbe4f0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* OTP Card */
+.otp-container {
+    width: 360px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+/* Heading */
+.otp-container h2 {
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* Inputs */
+.otp-container input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.otp-container input:focus {
+    border-color: #4a7cff;
+}
+
+/* Buttons */
+.otp-container button {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: none;
+    border-radius: 8px;
+    background: #4a7cff;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.otp-container button:hover {
+    background: #365fd6;
+}
+
+  </style>
+</head>
+<body>
+<div class = otp-container>
+<h2>Login with OTP</h2>
+
+<input type="email" id="email" placeholder="Enter email">
+<br><br>
+
+<button onclick="sendOtp()">Send OTP</button>
+
+<br><br>
+
+<input type="text" id="otp" placeholder="Enter OTP">
+<br><br>
+
+<button onclick="verifyOtp()">Verify OTP</button>
+
+<p class="bottom-text">
+            <a href="{% url 'login' %}">Login with Username</a>
+</div>
+
+<script>
+/* 1️⃣ Initialize EmailJS */
+(function () {
+  emailjs.init("MeTzCIu2Ky84s8o-n"); 
+})();
+
+/* Temporary storage (demo only) */
+let generatedOtp = "";
+let otpExpiryTime = 0;
+
+/* Generate OTP */
+function generateOtp() {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+/* Send OTP */
+function sendOtp() {
+  const email = document.getElementById("email").value;
+
+  if (!email) {
+    alert("Please enter email");
+    return;
+  }
+
+  generatedOtp = generateOtp();
+  otpExpiryTime = Date.now() + 2 * 60 * 1000; // 2 minutes
+
+  emailjs.send(
+    "service_io960p2",    
+    "template_txko0k5",     
+    {
+      to_email: email,
+      otp: generatedOtp
+    }
+  )
+  .then(() => {
+    alert("OTP sent to your email");
+  })
+  .catch(error => {
+    console.error("EmailJS error:", error);
+    alert("Failed to send OTP: " + error.text);
+  });
+}
+
+/* Verify OTP */
+
+function verifyOtp() {
+  const userOtp = document.getElementById("otp").value;
+
+  if (!userOtp) {
+    alert("Please enter OTP");
+    return;
+  }
+
+  if (Date.now() > otpExpiryTime) {
+    alert("OTP expired");
+    return;
+  }
+
+  if (userOtp === generatedOtp) {
+    alert("Login successful, Redirecting to Home Page");
+    window.location.href = "/";   
+  } else {
+    alert("Invalid OTP");
+  }
+}
+</script>
+
+</body>
+</html>

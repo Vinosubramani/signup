@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 from project.views import user_login, logout_view, signup
 
 urlpatterns = [
-    # ---------------- Admin ----------------
+     path("", include("app.urls")),
     path('admin/', admin.site.urls),
     path(
         'admin/logout/',

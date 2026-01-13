@@ -16,7 +16,12 @@
         <p><strong>Delivery Date:</strong> {{ order.delivery_date }}</p>
         <p><strong>Text on Cake:</strong> {{ order.message }}</p>
 
-        <a href="{% url 'products' %}" class="btn btn-primary mt-3">Back to Products</a>
+        <a href="{% url 'product:category_products' slug=order.product.category.slug %}"
+   class="btn btn-success  d-inline-block">
+    Continue Shopping
+</a>
+
+
     </div>
 </div>
 

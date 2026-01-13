@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import timedelta
 
 
 class Category(models.Model):
@@ -35,13 +37,13 @@ class Order(models.Model):
     quantity = models.IntegerField(default=1)
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    # ✅ FIXED HERE
+    
     delivery_date = models.DateField(null=True, blank=True)
 
     message = models.CharField(max_length=200, blank=True)
 
-    # PayU fields
-    txnid = models.CharField(max_length=100, unique=True, null=True, blank=True)
+    
+    transaction_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
     
 
     payment_status = models.CharField(
@@ -56,3 +58,13 @@ class Order(models.Model):
 
     def __str__(self):
         return f"{self.product.name} - {self.payment_status}"
+
+
+
+class EmailOTP(models.Model):
+    email = models.EmailField()
+    otp = models.CharField(max_length=6)
+    expires_at = models.DateTimeField()
+
+    def is_expired(self):
+        return timezone.now() > self.expires_at

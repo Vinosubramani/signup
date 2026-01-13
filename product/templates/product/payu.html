@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PayU Payment - {{ productinfo }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container my-5">
+
+<div class="card p-4 shadow">
+    <h2 class="text-center mb-4">Complete Your Payment</h2>
+
+    <div class="mb-4">
+        <p><strong>Product:</strong> {{ productinfo }}</p>
+        <p><strong>Amount:</strong> ₹{{ amount }}</p>
+        <p><strong>Transaction ID:</strong> {{ txnid }}</p>
+        <p><strong>Customer:</strong> {{ firstname }}</p>
+    </div>
+
+    
+    <form method="post" action="{{ payu_url }}">
+
+        <input type="hidden" name="key" value="{{ key }}">
+        <input type="hidden" name="txnid" value="{{ txnid }}">
+        <input type="hidden" name="amount" value="{{ amount }}">
+        <input type="hidden" name="productinfo" value="{{ productinfo }}">
+        <input type="hidden" name="firstname" value="{{ firstname }}">
+        <input type="hidden" name="email" value="{{ email }}">
+        <input type="hidden" name="phone" value="{{ phone }}">
+        <input type="hidden" name="hash" value="{{ hash }}">
+        <input type="hidden" name="surl" value="{{ surl }}">
+        <input type="hidden" name="furl" value="{{ furl }}">
+
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-success btn-lg px-5">
+                Pay ₹{{ amount }} Now
+            </button>
+
+            
+            <a href="{% url 'product:product_order' pk=order.product.id %}"
+               class="btn btn-secondary ms-2">
+                Back to Order
+            </a>
+        </div>
+    </form>
+
+    <div class="mt-4 alert alert-info">
+        <small>
+            <strong>Note:</strong> You will be redirected to PayU’s secure payment gateway.9   
+        </small>
+    </div>
+</div>
+
+</body>
+</html>
