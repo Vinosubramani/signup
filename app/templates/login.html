@@ -2,7 +2,7 @@
  {% load static %}
  <html>
  <head>
-   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="{% static 'app/style.css' %}"> -->
      <style>
         /* Reset */
@@ -25,10 +25,23 @@ body {
 /* Login form container */
 .login-form {
     width: 360px;
+    max-width: 90%;
     background: #ffffff;
     padding: 30px;
     border-radius: 14px;
     box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    .login-form {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .login-form h2 {
+        font-size: 1.5rem;
+    }
 }
 
 /* Heading */
@@ -110,7 +123,7 @@ body {
     <input type="text" name="username" >
     <label>Password:</label>
     <input type="password" name="password" >
-    <button type="submit">Submit</button>
+    <button type="submit">Login</button>
     <a href="{% url 'product:otp_login' %}">Login with OTP</a>
 
 

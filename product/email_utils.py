@@ -20,3 +20,25 @@ def send_otp_email(to_email, otp):
 
     email.content_subtype = "html"
     email.send()
+
+
+def send_order_confirmation_email(order, site_url):
+    subject = f"Order Confirmation - {order.product.name}"
+
+    html_message = render_to_string(
+        "product/order_confirmation_email.html",
+        {
+            "order": order,
+            "site_url": site_url
+        }
+    )
+
+    email = EmailMessage(
+        subject=subject,
+        body=html_message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[order.user.email],
+    )
+
+    email.content_subtype = "html"
+    email.send()

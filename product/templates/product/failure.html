@@ -1,3 +1,210 @@
-<h2>Payment Failed ❌</h2>
-<p>Order ID: {{ order.id }}</p>
-<p>Status: {{ order.payment_status }}</p>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment Failed - Cake Shop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'product/style.css' %}">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .failure-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .failure-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .failure-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: scaleIn 0.5s ease-out;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        .failure-icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+        }
+        .order-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+        .btn-retry {
+            background: #dc3545;
+            color: white;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+        }
+        .btn-retry:hover {
+            background: #c82333;
+            color: white;
+        }
+        .search-container .input-group {
+            width: 300px;
+        }
+        .welcome-text {
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'product:home' %}" style="background: linear-gradient(45deg, #FF9999, #B19CD9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">
+            🧁 Sweet Dreams
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="mx-auto">
+                <form method="get" action="{% url 'product:search_products' %}" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search products..." 
+                           style="border-radius: 25px; background: #E5FFF5;">
+                    <button type="submit" class="btn" style="background: #FF9999; color: white; border-radius: 50%; width: 40px; height: 40px;">🔍</button>
+                </form>
+            </div>
+            
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-3">
+                    <span class="welcome-text">Welcome, {{ order.user.username }}</span>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:my_order' %}">My Orders</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:wishlist' %}">❤️ Wishlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger btn-sm" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5 failure-container">
+    <div class="failure-card">
+        <!-- Failure Icon -->
+        <div class="failure-icon">
+            <svg viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="25" fill="none"/>
+                <path d="M16 16 L36 36 M36 16 L16 36" stroke-linecap="round"/>
+            </svg>
+        </div>
+
+        <h2 class="text-danger mb-3">❌ Payment Failed!</h2>
+        <p class="text-muted mb-4">We couldn't process your payment. Please try again.</p>
+
+        {% if order %}
+        <!-- Order Details -->
+        <div class="order-details">
+            <h5 class="mb-3 text-center">📋 Order Details</h5>
+            
+            <div class="detail-row">
+                <span class="detail-label">🔖 Order ID:</span>
+                <span class="detail-value">#{{ order.id }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">🎂 Product:</span>
+                <span class="detail-value">{{ order.product.name }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📦 Quantity:</span>
+                <span class="detail-value">{{ order.quantity }} kg</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">💰 Amount:</span>
+                <span class="detail-value text-danger">₹{{ order.amount }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">❌ Payment Status:</span>
+                <span class="detail-value text-danger">{{ order.payment_status }}</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-grid gap-2 mt-4">
+            <a href="{% url 'product:payu_payment' order.id %}" class="btn btn-retry">
+                🔄 Retry Payment
+            </a>
+            <a href="{% url 'product:my_order' %}" class="btn btn-outline-secondary">
+                View My Orders
+            </a>
+            <a href="{% url 'product:home' %}" class="btn btn-outline-secondary">
+                Back to Home
+            </a>
+        </div>
+        {% else %}
+        <div class="alert alert-warning mt-4">
+            <strong>⚠️ Order not found.</strong> Please check your orders page.
+        </div>
+        <div class="d-grid gap-2 mt-4">
+            <a href="{% url 'product:my_order' %}" class="btn btn-primary">
+                View My Orders
+            </a>
+            <a href="{% url 'product:home' %}" class="btn btn-outline-secondary">
+                Back to Home
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="mt-4 text-muted">
+            <small>💡 If you continue to face issues, please contact our support team.</small>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

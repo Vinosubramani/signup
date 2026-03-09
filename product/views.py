@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
-from .models import Product, Category, Order
+from .models import Product, Category, Order, Wishlist
 from django.contrib.auth.decorators import login_required
 import uuid
 from .hash import generate_hash
@@ -11,9 +11,17 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 from .models import EmailOTP
 from .utils import generate_otp, get_expiry
-from .services import send_otp_email
+from decimal import Decimal
+try:
+    from .services import send_otp_email
+except ImportError:
+    def send_otp_email(email, otp):
+        pass
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
+from django.views.decorators.cache import never_cache
+from .utils import apply_product_search
+
 
 
 logger = logging.getLogger(__name__)
@@ -23,10 +31,29 @@ logger = logging.getLogger(__name__)
 def home(request):
     categories = Category.objects.all()
     products = Product.objects.all()
-    return render(request, 'product/home.html', {
-        'categories': categories,
-        'products': products
-    })
+    featured_products = Product.objects.all()[:3] 
+    # request.session['theme'] = 'dark'
+    print(request.session.get('theme')) 
+
+
+    
+    # Get user's wishlist if authenticated
+    user_wishlist = []
+    is_first_order = False
+    if request.user.is_authenticated:
+        user_wishlist = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
+        is_first_order = is_user_first_order(request.user)
+
+    context={ 
+            'categories': categories,
+            'products': products,
+            'featured_products': featured_products,
+            'user_wishlist': user_wishlist,
+            'is_first_order': is_first_order,
+            'theme':request.session.get('theme','dark')
+        }
+    
+    return render(request, 'product/home.html', context)
 
 # ---------------- PRODUCTS ----------------
 def products(request):
@@ -36,14 +63,54 @@ def products(request):
 def category_products(request, slug):
     category = get_object_or_404(Category, slug=slug)
     products = Product.objects.filter(category=category)
-    return render(request, 'product/category.html', {
-        'category': category,
-        'products': products
+    
+    # Handle search within category
+    search_query = request.GET.get('search', '')
+    products = apply_product_search(products, search_query)
+    
+    
+    # Get user's wishlist if authenticated
+    user_wishlist = []
+    is_first_order = False
+    if request.user.is_authenticated:
+        user_wishlist = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
+        is_first_order = is_user_first_order(request.user)
+
+        context={
+            'category': category,
+            'products': products,
+            'search_query': search_query,
+            'user_wishlist': user_wishlist,
+            'is_first_order': is_first_order
+        }
+    
+    return render(request, 'product/category.html',context) 
+
+def search_products(request):
+    search_query = request.GET.get('search', '')
+    products = Product.objects.all()
+    
+    products = apply_product_search(products, search_query)
+    
+    # Get user's wishlist if authenticated
+    user_wishlist = []
+    if request.user.is_authenticated:
+        user_wishlist = list(Wishlist.objects.filter(user=request.user).values_list('product_id', flat=True))
+    
+    return render(request, 'product/search_results.html', {
+        'products': products,
+        'search_query': search_query,
+        'user_wishlist': user_wishlist
     })
 
 def product_recipe(request, pk):
     product = get_object_or_404(Product, pk=pk)
-    return render(request, 'product/recipe.html', {'product': product})
+    other_products = Product.objects.filter(category=product.category).exclude(pk=pk)[:6]
+    return render(request, 'product/recipe.html', {
+        'product': product,
+        'category_slug': product.category.slug,
+        'other_products': other_products
+    })
 
 @login_required(login_url='login')
 def product_order(request, pk):
@@ -53,6 +120,8 @@ def product_order(request, pk):
         quantity = request.POST.get("quantity")
         delivery_date = request.POST.get("delivery_date")
         message = request.POST.get("message")
+        delivery_address = request.POST.get("delivery_address")
+        delivery_pincode = request.POST.get("delivery_pincode")
         
         logger.info(
         "Order details | user=%s | product=%s | quantity=%s | delivery_date=%s | message=%s",
@@ -63,30 +132,60 @@ def product_order(request, pk):
         message
 )
 
-        if not quantity or not delivery_date:
-            return render(request, "product/order.html", {
-                "product": product,
-                "error": "All fields are required"
-            })
+        context ={
+            "product": product,
+            "is_first_order": is_user_first_order(request.user)
 
+        }
+        if not all([quantity, delivery_date, delivery_address, delivery_pincode]):
+            context["error"] ="All fields are required" 
+            return render(request, "product/order.html",context)
+
+
+
+        # Validate delivery location
+        if not validate_delivery_location(delivery_address, delivery_pincode):
+            context["error"]= "Sorry, we only deliver to pincode 635109."
+            return render(request, "product/order.html", context)
+                
+               
+            
+
+        # Calculate original amount
+        original_amount = int(quantity) * product.price
+        
+        # Apply first order discount
+        discount_info = apply_first_order_discount(request.user, original_amount)
+        
         order = Order.objects.create(
             product=product,
             user=request.user, 
             quantity=int(quantity),
             delivery_date=delivery_date,
             message=message,
-            amount=int(quantity) * product.price,
+            delivery_address=delivery_address,
+            delivery_pincode=delivery_pincode,
+            original_amount=discount_info['original_amount'],
+            amount=discount_info['final_amount'],
+            is_first_order=discount_info['is_first_order'],
+            first_order_discount=discount_info['discount_amount'],
             payment_status="PENDING"
         )
 
         return redirect("product:payu_payment", order_id=order.id)
     
+    # Check if user is eligible for first order discount
+    is_first_order = is_user_first_order(request.user)
+    
     return render(request, "product/order.html", {
-        "product": product
+        "product": product,
+        "is_first_order": is_first_order
     })
 
+@never_cache
 @login_required(login_url='login')
 def payu_payment(request, order_id):
+    
     order = get_object_or_404(Order, id=order_id)
     
     if order.payment_status == "SUCCESS":
@@ -128,7 +227,7 @@ def payu_payment(request, order_id):
         user_name,
         user_email,
     )
-    logger.info("hashh",hashh)
+    logger.info("hashh: %s",hashh)
     
     
     order.transaction_id = txnid
@@ -227,65 +326,108 @@ def payu_payment(request, order_id):
 #webhook
 @csrf_exempt
 def payu_webhook(request):
-    
-    
-    if request.method =="POST":
-        logger.info("post reached")
-    
+    """
+    PayU webhook to update order payment status.
+    """
 
-        txnid=request.POST.get("txnid")
-        status=request.POST.get("status")
-        amount = request.POST.get("amount") or request.GET.get("amount")
-        received_hash=request.POST.get("hash")
+    # Handle only POST requests
+    if request.method == "POST":
+        logger.info("PayU webhook POST received")
+        print("Webhook received:", request.POST)
 
+        txnid = request.POST.get("txnid")
+        status = request.POST.get("status")
+        amount = request.POST.get("amount")
+        received_hash = request.POST.get("hash")
+
+        # Check required fields
         if not all([txnid, status, amount, received_hash]):
             logger.warning("Missing webhook fields")
             return HttpResponse("Missing fields", status=400)
-        
-        status = status.strip().lower()
-        amount = "{:.2f}".format(float(amount.strip()))
 
-        # txnid="TXNED09E3DF-690"
-        # status="success"
-        # amount="700"
-        # received_hash="e8e5e0da4bf9f77cd51dcd187ba760d32cfef782c8fd9f4533d315ab4827b86da3c38693262a81fc7076b3b9702d868f261705e2464fd1c5e5383e27aa28f50a"
+        try:
+            status = status.strip().lower()
+            amount = "{:.2f}".format(float(amount.strip()))
+        except Exception:
+            logger.warning("Invalid amount or status format")
+            return HttpResponse("Invalid data", status=400)
 
-        SALT=settings.PAYU_SALT
-        KEY=settings.PAYU_KEY
+        # Generate hash
+        SALT = settings.PAYU_SALT
+        KEY = settings.PAYU_KEY
+
         hash_string = f"{SALT}|{status}|||||||||{amount}|{txnid}|{KEY}"
         calculated_hash = hashlib.sha512(hash_string.encode()).hexdigest().lower()
-        logger.info("hash:%s",calculated_hash)
-        logger.info("hash_string=[%s]", hash_string)
-        logger.info("calculated_hash=[%s]", calculated_hash)
-        logger.info("received_hash=[%s]", received_hash)
 
-        
-        
+        logger.info("hash_string: %s", hash_string)
+        logger.info("calculated_hash: %s", calculated_hash)
+        logger.info("received_hash: %s", received_hash)
 
-        if calculated_hash!=received_hash:
-            logger.warning("Hash verified mismatch")
+        # Verify hash
+        if calculated_hash != received_hash:
+            logger.warning("Hash mismatch in webhook")
             return HttpResponse("Invalid hash", status=400)
-        order=Order.objects.filter(transaction_id=txnid)
 
-        if status.lower()=="success":
-             order.payment_status="SUCCESS"
-        else:
-             order.payment_status="FAILED"
+        # Update order
+        try:
+            order = Order.objects.get(transaction_id=txnid)
 
-        order.save()
-        logger.info(f"order updated through webhook|order_id={order.id}")
-        return HttpResponse("Ok", status=200)
+            if status == "success":
+                order.payment_status = "SUCCESS"
+            else:
+                order.payment_status = "FAILED"
 
-    return HttpResponse("Invalid request",status=400)
+            order.save()
+            logger.info(f"Order updated via webhook | order_id={order.id}")
+
+            # Send confirmation email if success
+            if status == "success":
+                try:
+                    from .email_utils import send_order_confirmation_email
+                    site_url = request.build_absolute_uri('/')
+                    send_order_confirmation_email(order, site_url)
+                    logger.info(f"Email sent for order_id={order.id}")
+                except Exception as e:
+                    logger.error(f"Email failed: {e}")
+
+            return HttpResponse("OK", status=200)
+
+        except Order.DoesNotExist:
+            logger.error(f"Order not found for txnid={txnid}")
+            return HttpResponse("Order not found", status=404)
+
+    # Handle GET or other methods safely
+    logger.info("Webhook endpoint accessed with non-POST request")
+    return HttpResponse("Webhook ready", status=200)
+ 
+        
+
 
 @csrf_exempt
 def payment_success(request):
     txnid=request.POST.get("txnid") or request.GET.get("txnid")
-    order=Order.objects.filter(transaction_id=txnid).first()
-    if order:
+    
+    if not txnid:
+        return redirect('product:home')
+    
+    try:
+        order = Order.objects.get(transaction_id=txnid)
         order.payment_status="SUCCESS"
         order.save()
-    return render(request,"product/order_success.html",{"order":order})
+        
+        # Send order confirmation email
+        try:
+            from .email_utils import send_order_confirmation_email
+            site_url = request.build_absolute_uri('/')
+            send_order_confirmation_email(order, site_url)
+            logger.info(f"Order confirmation email sent for order_id={order.id}")
+        except Exception as e:
+            logger.error(f"Failed to send order confirmation email: {e}")
+        
+        return render(request,"product/order_success.html",{"order":order})
+    except Order.DoesNotExist:
+        logger.error(f"Order not found for txnid={txnid}")
+        return redirect('product:home')
 
 @csrf_exempt
 def payment_failure(request):
@@ -299,9 +441,11 @@ def payment_failure(request):
 
 
 def my_order(request):
-    
-    orders=Order.objects.filter(user=request.user)
-    return render(request,"product/my_order.html",{"orders":orders})
+    if request.user.is_superuser:
+        orders = Order.objects.all().order_by('-created_at')
+    else:
+        orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, "product/my_order.html", {"orders": orders})
 
 
 @require_POST
@@ -365,3 +509,59 @@ def verify_otp(request):
 def otp_login_page(request):
     return render(request, "product/otp_login.html")
 
+
+# ---------------- WISHLIST ----------------
+@login_required
+def toggle_wishlist(request, product_id):
+    """Toggle product in user's wishlist"""
+    product = get_object_or_404(Product, id=product_id)
+    wishlist_item, created = Wishlist.objects.get_or_create(
+        user=request.user, 
+        product=product
+    )
+    
+    if not created:
+        wishlist_item.delete()
+        is_wishlisted = False
+    else:
+        is_wishlisted = True
+    
+    return JsonResponse({
+        'is_wishlisted': is_wishlisted,
+        'wishlist_count': Wishlist.objects.filter(user=request.user).count()
+    })
+
+@login_required
+def wishlist_view(request):
+    """Display user's wishlist"""
+    wishlist_items = Wishlist.objects.filter(user=request.user).select_related('product')
+    return render(request, 'product/wishlist.html', {'wishlist_items': wishlist_items})
+
+
+# ---------------- FIRST ORDER DISCOUNT ----------------
+def is_user_first_order(user):
+    """Check if this is user's first successful order"""
+    return not Order.objects.filter(user=user, payment_status='SUCCESS').exists()
+
+def apply_first_order_discount(user, amount):
+    """Apply 10% discount for first order"""
+    if is_user_first_order(user):
+        discount = amount * Decimal('0.10')
+        return {
+            'is_first_order': True,
+            'discount_amount': discount,
+            'final_amount': amount - discount,
+            'original_amount': amount
+        }
+    return {
+        'is_first_order': False,
+        'discount_amount': Decimal('0'),
+        'final_amount': amount,
+        'original_amount': amount
+    }
+
+# ---------------- DELIVERY LOCATION ----------------
+def validate_delivery_location(address, pincode):
+    """Validate if delivery is available to the location"""
+    # Only allow delivery to pincode 635109
+    return pincode == '635109'

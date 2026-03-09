@@ -4,10 +4,12 @@ Django settings for project project.
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
 
-
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 # --------------------------------------------------
 # BASE DIR
@@ -22,7 +24,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-secret-key')
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'vinothini.pythonanywhere.com']
 
 # --------------------------------------------------
 # APPLICATIONS
@@ -38,8 +43,6 @@ INSTALLED_APPS = [
     'administartor',
     'staff',
     'product',
-
-    'django_extensions',
 ]
 
 # --------------------------------------------------
@@ -48,7 +51,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -86,15 +88,8 @@ TEMPLATES = [
 # --------------------------------------------------
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
-        'USER': os.getenv('POSTGRES_USER'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-        'HOST': os.getenv('POSTGRES_HOST'),
-        'PORT': os.getenv('POSTGRES_PORT'),
-        'OPTIONS': {
-            'sslmode': 'require',
-        },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -202,6 +197,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'vinothinisubramani692004@gmail.com'
 EMAIL_HOST_PASSWORD = 'fymk ptkn ctsr uzxq'
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
-
-

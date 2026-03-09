@@ -5,49 +5,189 @@
     <title>Order {{ product.name }} - Cake Shop</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'product/style.css' %}">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .order-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .product-summary {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .product-summary img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .order-form {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .form-label {
+            font-weight: 600;
+            color: #333;
+        }
+        .btn-order {
+            background: #28a745;
+            color: white;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+        }
+        .btn-order:hover {
+            background: #218838;
+            color: white;
+        }
+        .price-display {
+            font-size: 28px;
+            font-weight: 700;
+            color: #28a745;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container my-5">
-    <h2 class="mb-4 text-center">Order {{ product.name }}</h2>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'product:home' %}" style="background: linear-gradient(45deg, #FF9999, #B19CD9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">
+            🧁 Sweet Dreams
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="mx-auto">
+                <form method="get" action="{% url 'product:search_products' %}" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search products..." 
+                           style="border-radius: 25px; background: #E5FFF5;">
+                    <button type="submit" class="btn" style="background: #FF9999; color: white; border-radius: 50%; width: 40px; height: 40px;">🔍</button>
+                </form>
+            </div>
+            
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-3">
+                    <span class="welcome-text">Welcome, {{ user.username }}</span>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:my_order' %}">My Orders</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:wishlist' %}">❤️ Wishlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger btn-sm" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card p-4 shadow-sm">
+<div class="container my-5 order-container">
+    <h2 class="mb-4 text-center">Complete Your Order</h2>
+
+    <div class="row g-4">
+        <!-- Product Summary -->
+        <div class="col-md-5">
+            <div class="product-summary">
+                <h5 class="mb-3">Order Summary</h5>
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="mb-3">
+                <h4>{{ product.name }}</h4>
+                <p class="text-muted">{{ product.description }}</p>
+                <hr>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Price per kg:</span>
+                    <span class="price-display">₹{{ product.price }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Form -->
+        <div class="col-md-7">
+            <div class="order-form">
+                <h5 class="mb-4">📝 Order Details</h5>
+                
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
                 <form method="post">
                     {% csrf_token %}
 
-                    <div class="mb-3">
-                        <label class="form-label">Quantity (kg)</label>
-                        <input type="number" name="quantity" class="form-control" min="1" required>
+                    <div class="mb-4">
+                        <label class="form-label">🎂 Quantity (kg)</label>
+                        <input type="number" name="quantity" class="form-control form-control-lg" min="1" value="1" required>
+                        <small class="text-muted">Minimum order: 1 kg</small>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Delivery Date</label>
-                        <input type="date" name="delivery_date" class="form-control" required>
+                    <div class="mb-4">
+                        <label class="form-label">📅 Delivery Date</label>
+                        <input type="date" name="delivery_date" class="form-control form-control-lg" required>
+                        <small class="text-muted">Select your preferred delivery date</small>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Text on Cake</label>
-                        <input type="text" name="message" class="form-control" placeholder="Happy Birthday!" required>
+                    <div class="mb-4">
+                        <label class="form-label">📍 Delivery Address</label>
+                        <textarea name="delivery_address" class="form-control form-control-lg" rows="3" placeholder="Enter your complete delivery address" required></textarea>
+                        <small class="text-muted">We deliver only in Hosur areas</small>
                     </div>
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success me-2">
-                            Proceed to Payment
+                    <div class="mb-4">
+                        <label class="form-label">📮 Pincode</label>
+                        <input type="text" name="delivery_pincode" class="form-control form-control-lg" placeholder="e.g., 400001" maxlength="6" required>
+                        {% comment %} <small class="text-muted">Serviceable pincodes: 400001, 400002, 400053, 400058, 400061</small> {% endcomment %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">✍️ Message on Cake (Optional)</label>
+                        <input type="text" name="message" class="form-control form-control-lg" placeholder="e.g., Happy Birthday!" maxlength="50" required>
+                        <small class="text-muted">Maximum 50 characters</small>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <strong>ℹ️ Note:</strong> Final amount will be calculated based on quantity at checkout.
+                    </div>
+
+                    {% if is_first_order %}
+                    <div class="alert alert-success">
+                        <strong>🎉 First Order Special!</strong> Get 10% discount on your first order!
+                    </div>
+                    {% endif %}
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-order">
+                            Proceed to Payment 💳
                         </button>
-
-                        <!-- Add namespace -->
-                        <a href="{% url 'product:products' %}" class="btn btn-secondary">
-                            Back to Products
+                        <a href="{% url 'product:product_recipe' product.id %}" class="btn btn-outline-info">
+                            📖 View Recipe
+                        </a>
+                        <a href="{% url 'product:category_products' product.category.slug %}" class="btn btn-outline-secondary">
+                            ← Back to Products
                         </a>
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Set minimum date to today
+document.querySelector('input[name="delivery_date"]').min = new Date().toISOString().split('T')[0];
+</script>
 </body>
 </html>

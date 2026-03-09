@@ -10,10 +10,11 @@ def send_otp_email(email, otp):
     payload = {
         "service_id": settings.EMAILJS_SERVICE_ID,
         "template_id": settings.EMAILJS_TEMPLATE_ID,
+        
 
         # BOTH keys are required
-        "user_id": settings.EMAILJS_PUBLIC_KEY,      # ✅ Public key
-        "accessToken": settings.EMAILJS_PRIVATE_KEY, # ✅ Private key
+        "user_id": settings.EMAILJS_PUBLIC_KEY,     
+        "accessToken": settings.EMAILJS_PRIVATE_KEY, 
 
         "template_params": {
             "to_email": email,

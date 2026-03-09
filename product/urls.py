@@ -7,6 +7,7 @@ app_name = 'product'
 urlpatterns = [
     path('', views.home, name='home'),
     path('products/', views.products, name='products'),
+    path('search/', views.search_products, name='search_products'),
     path('category/<slug:slug>/', views.category_products, name='category_products'),
     path('product/<int:pk>/', views.product_order, name='product_order'),
     path('product/<int:pk>/recipe/', views.product_recipe, name='product_recipe'),
@@ -19,8 +20,9 @@ urlpatterns = [
     path("my_order/", views.my_order, name="my_order"),
     path("send-otp/", views.send_otp, name="send_otp"),
     path("verify-otp/", views.verify_otp, name="verify_otp"),
-     path("otp-login/", views.otp_login_page, name="otp_login"),
+    path("otp-login/", views.otp_login_page, name="otp_login"),
     
-    
-
+    # Wishlist URLs
+    path('wishlist/toggle/<int:product_id>/', views.toggle_wishlist, name='toggle_wishlist'),
+    path('wishlist/', views.wishlist_view, name='wishlist'),
 ]
