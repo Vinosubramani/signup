@@ -1,47 +1,71 @@
-/* Body Styling */
-body {
-    
-    margin: 20px;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background:white (11, 11, 11)
+/* =========================
+   GLOBAL RESET & BODY
+========================= */
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-  /*signup form container*/
-  .signup-form{
-    background-color: #e4e6e8;      
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* =========================
+   AUTH PAGES (LOGIN / SIGNUP)
+========================= */
+.signup-page,
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Signup Form */
+.signup-form {
+    background-color: #e4e6e8;
     padding: 40px;
     border-radius: 15px;
-    box-shadow: 0 0px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     width: 100%;
     max-width: 400px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
-  /*heading*/
-  .signup-form h2{
-    margin-bottom: 20px;
-    color:#333;
-  }
 
-  /* Inputs */
+/* Mobile responsiveness for signup */
+@media (max-width: 480px) {
+    .signup-form {
+        padding: 20px;
+        margin: 20px;
+        max-width: 90%;
+    }
+}
+
+.signup-form h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
 .signup-form input {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
     border-radius: 8px;
     border: none;
-    background-color: rgb(207, 195, 195);        
+    background-color: rgb(207, 195, 195);
     outline: none;
     font-size: 16px;
 }
 
-/* Button */
 .signup-form button {
     width: 100%;
     padding: 12px;
@@ -59,7 +83,6 @@ body {
     background-color: #1e40af;
 }
 
-/* Login link */
 .signup-form .login-link {
     margin-top: 15px;
     font-size: 14px;
@@ -70,44 +93,47 @@ body {
     color: #3b82f6;
 }
 
-/* Login box */
+/* Login Form */
 .login-form {
-    background-color: #d1d5db;  
+    background-color: #d1d5db;
     padding: 40px;
     border-radius: 15px;
     width: 350px;
+    max-width: 90%;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* Heading */
+/* Mobile responsiveness for login */
+@media (max-width: 480px) {
+    .login-form {
+        padding: 20px;
+        margin: 20px;
+        width: auto;
+    }
+}
+
 .login-form h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
 }
 
-/* Labels */
 .login-form label {
     font-weight: bold;
     margin-top: 10px;
     display: block;
 }
 
-/* Input fields */
 .login-form input {
     width: 100%;
     padding: 12px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-
-    background-color: white;    
+    margin: 5px 0 15px;
+    background-color: white;
     border: none;
     border-radius: 8px;
     font-size: 16px;
     outline: none;
 }
 
-/* Submit button */
 .login-form button {
     width: 100%;
     padding: 12px;
@@ -124,86 +150,119 @@ body {
     background-color: #1e40af;
 }
 
-
-/* Centering the dashboard card */
+/* =========================
+   DASHBOARD
+========================= */
 .dashboard-container {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: white;
 }
 
-/* Dashboard card */
 .dashboard-card {
-    background-color: #d1d5db;   
+    background-color: #d1d5db;
     padding: 40px;
     border-radius: 15px;
     text-align: center;
     width: 350px;
+    max-width: 90%;
     box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* Heading */
+/* Mobile responsiveness for dashboard */
+@media (max-width: 480px) {
+    .dashboard-card {
+        padding: 20px;
+        margin: 20px;
+        width: auto;
+    }
+}
+
 .dashboard-card h2 {
-    color: #333;
     margin-bottom: 10px;
 }
 
-/* Paragraph text */
 .dashboard-card p {
-    color: #444;
     margin-bottom: 20px;
     font-size: 16px;
 }
 
-
-
-/*productcss*/
-
-
-/* BASIC RESET */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-/* NAVBAR */
+/* =========================
+   NAVBAR
+========================= */
 .navbar {
     padding: 12px 0;
 }
 
 .navbar-brand {
     font-size: 1.6rem;
-    color: #6a0dad !important; /* Violet touch */
+    color: #6a0dad !important;
 }
 
 .nav-link {
     font-weight: 500;
 }
 
-/* CARD */
-.card {
+/* =========================
+   CARDS (PRODUCTS)
+========================= */
+.card,
+.product-card {
     border: none;
     border-radius: 12px;
     overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
+    cursor: pointer;
 }
 
-.card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+/* Mobile responsiveness for cards */
+@media (max-width: 768px) {
+    .card,
+    .product-card {
+        margin-bottom: 20px;
+    }
+    
+    .card:hover,
+    .product-card:hover {
+        transform: none;
+    }
 }
 
-.card img {
-    height: 180px;
+.card:hover,
+.product-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.card img,
+.product-card img,
+.card-img-top {
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
 
-/* CARD BODY */
-.card-body h5 {
+.card:hover img,
+.product-card:hover img {
+    transform: scale(1.1);
+}
+
+.card-body {
+    transition: background-color 0.3s ease;
+}
+
+.card:hover .card-body {
+    background-color: #f8f9fa;
+}
+
+.card-body h5,
+.card-body h6 {
     font-weight: 600;
+}
+
+.card:hover .card-body h5,
+.card:hover .card-body h6 {
+    color: #6a0dad;
 }
 
 .card-body p {
@@ -211,103 +270,140 @@ body {
     font-size: 1rem;
 }
 
-/* BUTTONS */
-.btn-success {
-    background-color: #28a745;
-    border: none;
-    padding: 6px 14px;
+.card:hover .card-body p {
+    color: #333;
 }
 
-.btn-success:hover {
-    background-color: #218838;
-}
-
-.btn-warning {
-    background-color: #ffb300;
-    border: none;
-    padding: 6px 14px;
-}
-
-.btn-warning:hover {
-    background-color: #e0a200;
-}
-
-/* CARD FOOTER */
+/* =========================
+   CARD FOOTER & BUTTONS
+========================= */
 .card-footer {
     background-color: #fff;
     border-top: none;
     padding: 12px;
 }
 
-/* FOOTER */
+.card-footer a {
+    width: 80px;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 12px rgba(40,167,69,0.4);
+}
+
+.btn-warning {
+    background-color: #f0ad4e;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.btn-warning:hover {
+    background-color: #ec971f;
+    box-shadow: 0 4px 12px rgba(255,179,0,0.4);
+}
+
+/* =========================
+   CATEGORY CARDS
+========================= */
+.category-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.category-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(106,13,173,0.15);
+    border-color: #6a0dad;
+}
+
+.category-card:hover .card-body {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+}
+
+.category-card:hover h5 {
+    color: #6a0dad !important;
+}
+
+.category-card:hover img {
+    transform: scale(1.08);
+    filter: brightness(1.1);
+}
+
+/* =========================
+   FOOTER
+========================= */
 footer {
     margin-top: 40px;
     color: #444;
 }
 
-
-
-
-
-/* Main Page Spacing */
-body {
-    background-color: #f9f9f9;
+/* =========================
+   SOCIAL MEDIA ICONS
+========================= */
+.social-icons {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-/* Card Styling */
-.card {
+.instagram-icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
     border-radius: 12px;
-    overflow: hidden;
-    transition: 0.3s ease-in-out;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
-.card:hover {
-    transform: scale(1.03);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+.instagram-icon:hover {
+    transform: scale(1.1);
+    box-shadow: 0 8px 20px rgba(188, 24, 136, 0.3);
 }
 
-/* Product Image */
-.card-img-top {
-    height: 200px;
-    object-fit: cover;
+.instagram-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid white;
+    border-radius: 6px;
 }
 
-/* Buttons in Card */
-.card-footer a {
-    width: 80px;
+.instagram-icon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 12px;
+    height: 12px;
+    border: 2px solid white;
+    border-radius: 50%;
 }
 
-/* Order Button */
-.btn-success {
-    background-color: #28a745;
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 14px;
+.instagram-icon .dot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 4px;
+    height: 4px;
+    background-color: white;
+    border-radius: 50%;
 }
-
-/* Recipe Button */
-.btn-warning {
-    background-color: #f0ad4e;
-    border-radius: 20px;
-    padding: 5px 12px;
-    font-size: 14px;
-}
-
-/* On Hover */
-.btn-success:hover {
-    background-color: #218838;
-}
-
-.btn-warning:hover {
-    background-color: #ec971f;
-}
-
-/* Page Title */
-h2 {
-    font-weight: 600;
-}
-
-
-
-
-

@@ -5,25 +5,216 @@
     <title>Order Successful - Cake Shop</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'product/style.css' %}">
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+        .success-container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .success-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: scaleIn 0.5s ease-out;
+        }
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        .success-icon svg {
+            width: 60px;
+            height: 60px;
+            stroke: white;
+            stroke-width: 3;
+            fill: none;
+        }
+        .order-details {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #666;
+        }
+        .detail-value {
+            font-weight: 600;
+            color: #333;
+        }
+        .btn-continue {
+            background: #28a745;
+            color: white;
+            padding: 12px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+        }
+        .btn-continue:hover {
+            background: #218838;
+            color: white;
+        }
+        .search-container .input-group {
+            width: 300px;
+        }
+        .welcome-text {
+            color: #333;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container my-5 text-center">
-    <div class="card p-4 shadow-sm">
-        <h2 class="mb-3 text-success">Order Placed Successfully!</h2>
-        <p><strong>Product:</strong> {{ order.product.name }}</p>
-        <p><strong>Quantity:</strong> {{ order.quantity }} kg</p>
-        <p><strong>Delivery Date:</strong> {{ order.delivery_date }}</p>
-        <p><strong>Text on Cake:</strong> {{ order.message }}</p>
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'product:home' %}" style="background: linear-gradient(45deg, #FF9999, #B19CD9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">
+            🧁 Sweet Dreams
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="mx-auto">
+                <form method="get" action="{% url 'product:search_products' %}" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search products..." 
+                           style="border-radius: 25px; background: #E5FFF5;">
+                    <button type="submit" class="btn" style="background: #FF9999; color: white; border-radius: 50%; width: 40px; height: 40px;">🔍</button>
+                </form>
+            </div>
+            
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-3">
+                    <span class="welcome-text">Welcome, {{ order.user.username }}</span>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:my_order' %}">My Orders</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:wishlist' %}">❤️ Wishlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger btn-sm" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-        <a href="{% url 'product:category_products' slug=order.product.category.slug %}"
-   class="btn btn-success  d-inline-block">
-    Continue Shopping
-</a>
+<div class="container my-5 success-container">
+    <div class="success-card">
+        <!-- Success Icon -->
+        <div class="success-icon">
+            <svg viewBox="0 0 52 52">
+                <circle cx="26" cy="26" r="25" fill="none"/>
+                <path d="M14 27l7 7 16-16" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
 
+        <h2 class="text-success mb-3">🎉 Order Placed Successfully!</h2>
+        <p class="text-muted mb-4">Thank you for your order. We'll start preparing your delicious treat!</p>
 
+        <!-- Order Details -->
+        <div class="order-details">
+            <h5 class="mb-3 text-center">📋 Order Details</h5>
+            
+            <div class="detail-row">
+                <span class="detail-label">🎂 Product:</span>
+                <span class="detail-value">{{ order.product.name }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📦 Quantity:</span>
+                <span class="detail-value">{{ order.quantity }} kg</span>
+            </div>
+            
+            {% if order.is_first_order %}
+            <div class="detail-row">
+                <span class="detail-label">💰 Original Amount:</span>
+                <span class="detail-value">₹{{ order.original_amount }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">🎉 First Order Discount (10%):</span>
+                <span class="detail-value text-success">-₹{{ order.first_order_discount }}</span>
+            </div>
+            {% endif %}
+            
+            <div class="detail-row">
+                <span class="detail-label">💰 Total Amount:</span>
+                <span class="detail-value text-success">₹{{ order.amount }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">📅 Delivery Date:</span>
+                <span class="detail-value">{{ order.delivery_date }}</span>
+            </div>
+            
+            {% if order.message %}
+            <div class="detail-row">
+                <span class="detail-label">✍️ Message:</span>
+                <span class="detail-value">"{{ order.message }}"</span>
+            </div>
+            {% endif %}
+            
+            <div class="detail-row">
+                <span class="detail-label">🔖 Transaction ID:</span>
+                <span class="detail-value">{{ order.transaction_id }}</span>
+            </div>
+            
+            <div class="detail-row">
+                <span class="detail-label">✅ Payment Status:</span>
+                <span class="detail-value text-success">{{ order.payment_status }}</span>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-grid gap-2 mt-4">
+            <a href="{% url 'product:my_order' %}" class="btn btn-continue">
+                View My Orders
+            </a>
+            <a href="{% url 'product:category_products' order.product.category.slug %}" class="btn btn-outline-success">
+                Continue Shopping
+            </a>
+            <a href="{% url 'product:home' %}" class="btn btn-outline-secondary">
+                Back to Home
+            </a>
+        </div>
+
+        <div class="mt-4 text-muted">
+            <small>📧 A confirmation email has been sent to your registered email address.</small>
+        </div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

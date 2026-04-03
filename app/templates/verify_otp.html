@@ -2,6 +2,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify OTP</title>
 
     <style>
@@ -25,10 +26,23 @@
       /* Card */
       .otp-card {
         width: 360px;
+        max-width: 90%;
         background: #ffffff;
         padding: 30px;
         border-radius: 14px;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Mobile responsiveness */
+      @media (max-width: 480px) {
+        .otp-card {
+          padding: 20px;
+          margin: 20px;
+        }
+        
+        .otp-card h2 {
+          font-size: 1.5rem;
+        }
       }
 
       /* Heading */

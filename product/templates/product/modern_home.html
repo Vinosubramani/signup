@@ -1,0 +1,563 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sweet Dreams Bakery | Modern Cake Shop</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pastel-pink: #FFE5E5;
+            --pastel-purple: #E5E5FF;
+            --pastel-mint: #E5FFF5;
+            --pastel-peach: #FFE5D9;
+            --pastel-lavender: #F0E5FF;
+            --soft-coral: #FF9999;
+            --soft-purple: #B19CD9;
+            --soft-mint: #99E6CC;
+            --text-dark: #2D3748;
+            --text-light: #718096;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-purple) 100%);
+            min-height: 100vh;
+        }
+
+        /* Modern Navbar */
+        .modern-navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, var(--soft-coral), var(--soft-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 400px;
+        }
+
+        .search-input {
+            border: none;
+            border-radius: 25px;
+            padding: 12px 50px 12px 20px;
+            background: var(--pastel-mint);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: var(--soft-coral);
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--pastel-peach) 0%, var(--pastel-lavender) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, var(--soft-coral), var(--soft-purple));
+            border: none;
+            border-radius: 50px;
+            padding: 15px 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(255, 153, 153, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 153, 153, 0.4);
+        }
+
+        /* Floating Elements */
+        .floating-cake {
+            position: absolute;
+            font-size: 4rem;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Modern Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: none;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        .price-tag {
+            background: linear-gradient(45deg, var(--soft-coral), var(--soft-purple));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        /* Category Pills */
+        .category-pill {
+            background: var(--pastel-mint);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 25px;
+            margin: 5px;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .category-pill:hover {
+            background: var(--soft-mint);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--soft-coral), var(--soft-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Wishlist Heart */
+        .wishlist-heart {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .wishlist-heart:hover {
+            background: var(--soft-coral);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Modern Footer */
+        .modern-footer {
+            background: linear-gradient(135deg, var(--text-dark) 0%, #4A5568 100%);
+            color: white;
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            
+            .search-box {
+                max-width: 100%;
+                margin: 1rem 0;
+            }
+        }
+
+        /* Loading Animation */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Notification Toast */
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--soft-mint);
+            color: var(--text-dark);
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            z-index: 9999;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .toast-notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Modern Navbar -->
+    <nav class="modern-navbar">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-3">
+                    <a class="navbar-brand" href="{% url 'product:home' %}">
+                        🧁 Sweet Dreams
+                    </a>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="search-box mx-auto">
+                        <form method="get" action="{% url 'product:search_products' %}">
+                            <input type="text" name="search" class="form-control search-input" placeholder="Search for delicious treats...">
+                            <button type="submit" class="search-btn">🔍</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="col-md-3 text-end">
+                    <a href="{% url 'product:wishlist' %}" class="btn btn-link text-decoration-none me-3">
+                        ❤️ <span id="wishlist-count">0</span>
+                    </a>
+                    <a href="{% url 'product:my_order' %}" class="btn btn-link text-decoration-none me-3">
+                        📦 Orders
+                    </a>
+                    <a href="{% url 'logout' %}" class="btn btn-outline-danger btn-sm">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="floating-cake" style="top: 10%; left: 10%;">🍰</div>
+        <div class="floating-cake" style="top: 20%; right: 15%; animation-delay: -2s;">🧁</div>
+        <div class="floating-cake" style="bottom: 30%; left: 20%; animation-delay: -4s;">🍪</div>
+        
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1>Sweetest Dreams Come True</h1>
+                        <p>Handcrafted with love, delivered with care. Experience the magic of our artisanal cakes and pastries.</p>
+                        <button class="cta-button" onclick="scrollToProducts()">
+                            Explore Treats ✨
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500" 
+                             alt="Delicious Cake" 
+                             class="img-fluid rounded-circle" 
+                             style="max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.1);">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-number">500+</div>
+                        <p>Happy Customers</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-number">50+</div>
+                        <p>Cake Varieties</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card">
+                        <div class="stat-number">24/7</div>
+                        <p>Fresh Baking</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="glass-card">
+                        <h4 class="mb-4">🍰 Categories</h4>
+                        {% for category in categories %}
+                            <a href="{% url 'product:category_products' category.slug %}" class="category-pill">
+                                {{ category.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="col-md-9">
+                    <h3 class="mb-4" id="products">Featured Delights</h3>
+                    <div class="row g-4">
+                        {% for product in featured_products|slice:":6" %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="product-card" onclick="window.location.href='{% url 'product:product_order' pk=product.id %}'">
+                                <button class="wishlist-heart" onclick="event.stopPropagation(); toggleWishlist({{ product.id }}, this)">
+                                    ♡
+                                </button>
+                                
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                                {% else %}
+                                    <div class="product-image d-flex align-items-center justify-content-center bg-light">
+                                        <span style="font-size: 4rem;">🍰</span>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="card-body text-center p-4">
+                                    <h5 class="card-title mb-3">{{ product.name }}</h5>
+                                    <div class="price-tag">₹{{ product.price }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern Footer -->
+    <footer class="modern-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🧁 Sweet Dreams Bakery</h5>
+                    <p>Creating sweet memories, one cake at a time.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="https://instagram.com/sweet_venture__/" target="_blank" class="text-white text-decoration-none">
+                        📱 Follow us on Instagram
+                    </a>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center">
+                <p>&copy; 2025 Sweet Dreams Bakery. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast-notification">
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Smooth scroll to products
+        function scrollToProducts() {
+            document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            toastMessage.textContent = message;
+            toast.style.background = type === 'success' ? 'var(--soft-mint)' : 'var(--soft-coral)';
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Toggle wishlist with animation
+        function toggleWishlist(productId, button) {
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<div class="loading-spinner"></div>';
+            
+            fetch(`/wishlist/toggle/${productId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                button.innerHTML = data.is_wishlisted ? '♥' : '♡';
+                button.style.color = data.is_wishlisted ? 'var(--soft-coral)' : '';
+                
+                // Update wishlist count
+                document.getElementById('wishlist-count').textContent = data.wishlist_count || 0;
+                
+                // Show toast
+                const message = data.is_wishlisted ? 'Added to wishlist! ❤️' : 'Removed from wishlist';
+                showToast(message);
+            })
+            .catch(error => {
+                button.innerHTML = originalContent;
+                showToast('Something went wrong!', 'error');
+            });
+        }
+
+        // Initialize wishlist count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // You can fetch the actual wishlist count here
+            // For now, we'll set it to 0
+            document.getElementById('wishlist-count').textContent = '{{ user_wishlist|length|default:0 }}';
+        });
+
+        // Add parallax effect to floating elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelectorAll('.floating-cake');
+            
+            parallax.forEach((element, index) => {
+                const speed = 0.5 + (index * 0.1);
+                element.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results - Cake Shop</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .card-img-top {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+        }
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .search-container .input-group {
+            width: 300px;
+        }
+        .welcome-text {
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* WISHLIST BUTTON */
+        .wishlist-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .wishlist-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn .heart {
+            font-size: 18px;
+            color: #ccc;
+            transition: color 0.3s ease;
+        }
+
+        .wishlist-btn.active .heart {
+            color: #e74c3c;
+        }
+        
+        /* SHARE BUTTON */
+        .share-btn {
+            position: absolute;
+            top: 10px;
+            right: 55px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .share-btn:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+
+        .share-btn .share-icon {
+            font-size: 16px;
+        }
+        
+        /* TRENDING BADGE */
+        .trending-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* BEST SELLER BADGE */
+        .bestseller-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            z-index: 10;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-light shadow-sm" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px);">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'product:home' %}" style="background: linear-gradient(45deg, #FF9999, #B19CD9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 700;">
+            🧁 Sweet Dreams
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="mx-auto">
+                <form method="get" action="{% url 'product:search_products' %}" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" 
+                           placeholder="Search products..." 
+                           value="{{ search_query }}"
+                           style="border-radius: 25px; background: #E5FFF5;">
+                    <button type="submit" class="btn" style="background: #FF9999; color: white; border-radius: 50%; width: 40px; height: 40px;">🔍</button>
+                </form>
+            </div>
+            
+            <ul class="navbar-nav ms-auto align-items-center">
+                <li class="nav-item me-2">
+                    <span class="welcome-text">Welcome, {{ user.username }}</span>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:my_order' %}">My Orders</a>
+                </li>
+                <li class="nav-item me-2">
+                    <a class="nav-link" href="{% url 'product:wishlist' %}">❤️ Wishlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger btn-sm" href="{% url 'logout' %}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <h2 class="text-center mb-4">Search Results</h2>
+    
+    {% if search_query %}
+    <div class="alert alert-info">
+        Showing results for "<strong>{{ search_query }}</strong>"
+        <span class="badge bg-primary ms-2">{{ products.count }} found</span>
+        <a href="{% url 'product:home' %}" class="btn btn-sm btn-outline-secondary ms-2">Clear Search</a>
+    </div>
+    {% endif %}
+    
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100" onclick="window.location.href='{% url 'product:product_recipe' product.id %}'" style="cursor: pointer;">
+                {% if "chocolate fudge" in product.name|lower %}
+                    <div class="trending-badge">🔥 Trending</div>
+                {% elif "red velvet" in product.name|lower or "triple chocolate brownie" in product.name|lower %}
+                    <div class="bestseller-badge">⭐ Best Seller</div>
+                {% endif %}
+                {% if user.is_authenticated %}
+                    <button class="wishlist-btn {% if product.id in user_wishlist %}active{% endif %}" onclick="event.stopPropagation(); toggleWishlist({{ product.id }}, this)">
+                        <span class="heart">♥</span>
+                    </button>
+                    <button class="share-btn" onclick="event.stopPropagation(); shareProduct('{{ product.name }}', 'http://127.0.0.1:8000{% url 'product:product_recipe' product.id %}')">
+                        <span class="share-icon">↗</span>
+                    </button>
+                {% endif %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover; width: 100%;">
+                <div class="card-body text-center d-flex flex-column">
+                    <h5>{{ product.name }}</h5>
+                    <p class="text-muted">{{ product.category.name }}</p>
+                    <p class="text-success fw-bold">₹{{ product.price }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <h4 class="text-muted">No products found</h4>
+                {% if search_query %}
+                <p class="text-muted">Try searching with different keywords</p>
+                {% else %}
+                <p class="text-muted">Enter a search term to find products</p>
+                {% endif %}
+                <a href="{% url 'product:home' %}" class="btn btn-primary mt-3">Browse All Products</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+// Get CSRF token for AJAX requests
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Toggle wishlist function
+function toggleWishlist(productId, button) {
+    fetch(`/wishlist/toggle/${productId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.is_wishlisted) {
+            button.classList.add('active');
+        } else {
+            button.classList.remove('active');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// Share product function
+function shareProduct(productName, productUrl) {
+    const cleanUrl = productUrl.replace(/\/+/g, '/').replace(':/', '://');
+    if (navigator.share) {
+        navigator.share({
+            title: productName,
+            text: `Check out this delicious ${productName} from Cake Shop!`,
+            url: cleanUrl
+        });
+    } else {
+        navigator.clipboard.writeText(cleanUrl).then(() => {
+            alert('Product link copied to clipboard!');
+        });
+    }
+}
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

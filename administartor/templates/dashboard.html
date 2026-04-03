@@ -1,7 +1,31 @@
 {% load static %}
 <html>
 <head>
-   <a href="{% url 'admin_logout_override' %}">Log out</a>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .dashboard-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .dashboard-card {
+            background: #d1d5db;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            width: 350px;
+            max-width: 90%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        @media (max-width: 480px) {
+            .dashboard-card {
+                padding: 20px;
+                margin: 20px;
+            }
+        }
+    </style>
     <title>Dashboard for students</title>
 </head>
 

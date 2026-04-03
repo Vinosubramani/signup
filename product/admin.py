@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Category, Order, EmailOTP
+from .models import Product, Category, Order, EmailOTP, Wishlist
 
 
 @admin.register(Category)
@@ -29,7 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user_id','id','product', 'user', 'quantity', 'delivery_date', 'message','payment_status','created_at',)
+    list_display = ('user_id','id','product', 'user', 'quantity', 'delivery_date','delivery_address','delivery_pincode','message','payment_status','created_at',)
     list_filter = ('delivery_date',)
     search_fields = ('product__name', 'user__username', 'message')
     readonly_fields = ('product', 'user', 'quantity', 'delivery_date', 'message', 'created_at')
@@ -60,4 +60,10 @@ class EmailOTPAdmin(admin.ModelAdmin):
     
     def has_delete_permission(self,reuest, ob=None):
         return True
-       
+
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ('user', 'product', 'created_at')
+    list_filter = ('created_at',)
+    search_fields = ('user__username', 'product__name')
+    readonly_fields = ('created_at',)

@@ -1,0 +1,168 @@
+/* Sweet Dreams Bakery - Modern UI Framework */
+
+:root {
+    /* Pastel Color Palette */
+    --pastel-pink: #FFE5E5;
+    --pastel-purple: #E5E5FF;
+    --pastel-mint: #E5FFF5;
+    --pastel-peach: #FFE5D9;
+    --pastel-lavender: #F0E5FF;
+    
+    /* Soft Accent Colors */
+    --soft-coral: #FF9999;
+    --soft-purple: #B19CD9;
+    --soft-mint: #99E6CC;
+    
+    /* Text Colors */
+    --text-dark: #2D3748;
+    --text-light: #718096;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, var(--soft-coral), var(--soft-purple));
+    --gradient-background: linear-gradient(135deg, var(--pastel-pink) 0%, var(--pastel-purple) 100%);
+    
+    /* Shadows */
+    --shadow-md: 0 8px 25px rgba(0,0,0,0.1);
+    --shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
+    
+    /* Border Radius */
+    --radius-lg: 25px;
+    --radius-xl: 35px;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--gradient-background);
+    color: var(--text-dark);
+}
+
+/* Glass Morphism */
+.glass {
+    background: rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-lg);
+}
+
+/* Modern Buttons */
+.btn-modern {
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: var(--radius-xl);
+    padding: 12px 30px;
+    color: white;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+    color: white;
+}
+
+/* Modern Cards */
+.card-modern {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: var(--radius-lg);
+    transition: all 0.4s ease;
+    border: none;
+    overflow: hidden;
+}
+
+.card-modern:hover {
+    transform: translateY(-15px) scale(1.02);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Product Image Effects */
+.product-image {
+    transition: transform 0.4s ease;
+}
+
+.card-modern:hover .product-image {
+    transform: scale(1.1);
+}
+
+/* Wishlist Button */
+.wishlist-btn {
+    background: var(--pastel-pink);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    transition: all 0.3s ease;
+}
+
+.wishlist-btn:hover {
+    background: var(--soft-coral);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.pulse { animation: pulse 2s infinite; }
+
+/* Loading Spinner */
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Toast Notifications */
+.toast-modern {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--soft-mint);
+    color: var(--text-dark);
+    padding: 15px 25px;
+    border-radius: 15px;
+    box-shadow: var(--shadow-lg);
+    z-index: 9999;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.toast-modern.show {
+    transform: translateX(0);
+}
+
+/* Responsive Product Images */
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 200px !important;
+        object-fit: contain !important;
+        background-color: #f8f9fa !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .card-img-top {
+        height: 180px !important;
+    }
+}
+
+body.dark {
+    background-color: black;
+    color: white;
+}
+
+body.light {
+    background-color: white;
+    color: black;
+}

@@ -24,6 +24,18 @@ class Product(models.Model):
         return self.name
 
 
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ('user', 'product')
+    
+    def __str__(self):
+        return f"{self.user.username} - {self.product.name}"
+
+
 class Order(models.Model):
     PAYMENT_STATUS_CHOICES = (
         ('PENDING', 'PENDING'),
@@ -40,6 +52,9 @@ class Order(models.Model):
     
     delivery_date = models.DateField(null=True, blank=True)
 
+    delivery_address = models.TextField()
+    delivery_pincode = models.CharField(max_length=6)
+
     message = models.CharField(max_length=200, blank=True)
 
     
@@ -53,6 +68,15 @@ class Order(models.Model):
     )
 
     payment_gateway = models.CharField(max_length=50, default='PayU')
+    
+    # First order discount fields
+    is_first_order = models.BooleanField(default=False)
+    first_order_discount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    original_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    
+    # Delivery location fields
+    delivery_address = models.TextField(blank=True)
+    delivery_pincode = models.CharField(max_length=6, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -68,3 +92,6 @@ class EmailOTP(models.Model):
 
     def is_expired(self):
         return timezone.now() > self.expires_at
+    
+
+    

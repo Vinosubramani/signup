@@ -1,8 +1,23 @@
 {% load static %}
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'app/style.css' %}">
     <title>Dashboard for staff</title>
+    <script>
+    function shareContent() {
+        if (navigator.share) {
+            navigator.share({
+                title: 'Staff Dashboard',
+                text: 'Check out this staff dashboard',
+                url: window.location.href
+            });
+        } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied to clipboard!');
+        }
+    }
+    </script>
 </head>
 
 <body>
@@ -11,7 +26,7 @@
     <div class="dashboard-card">
         <h2>WELCOME Staff !</h2>
         <p>You have successfully logged in.</p>  
-        <a href="{% url 'logout' %}">logout</a>
+        <a href="#" onclick="shareContent()">Share</a> | <a href="{% url 'logout' %}">Logout</a>
     </div>
 </div>
 
